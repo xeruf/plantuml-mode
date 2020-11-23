@@ -6,8 +6,8 @@
 ;; Author: Zhang Weize (zwz)
 ;; Maintainer: Carlo Sciolla (skuro)
 ;; Keywords: uml plantuml ascii
-;; Version: 1.2.9
-;; Package-Version: 1.2.9
+;; Version: 1.2.10
+;; Package-Version: 1.2.10
 ;; Package-Requires: ((dash "2.0.0") (emacs "25.0"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -77,7 +77,7 @@
 (require 'xml)
 
 (defgroup plantuml-mode nil
-  "Major mode for editing plantuml file."
+  "Major mode for editing a plantuml file."
   :group 'languages)
 
 (defcustom plantuml-jar-path
@@ -94,7 +94,7 @@
 
 (defvar plantuml-mode-hook nil "Standard hook for plantuml-mode.")
 
-(defconst plantuml-mode-version "20190905.838" "The plantuml-mode version string.")
+(defconst plantuml-mode-version "20201123" "The plantuml-mode version string.")
 
 (defvar plantuml-mode-debug-enabled nil)
 
@@ -323,7 +323,8 @@
                            (buffer-substring-no-properties pos (point)))))))
           (setq found (search-forward ";" nil nil)))))))
 
-(defconst plantuml-preview-buffer "*PLANTUML Preview*")
+(defconst plantuml-preview-buffer "*PlantUML Preview*")
+(defconst plantuml-stderr-buffer "*PlantUML Stderr*")
 
 (defvar plantuml-output-type
   (if (not (display-images-p))
@@ -383,11 +384,16 @@ Note that output type `txt' is promoted to `utxt' for better rendering."
 
 (defun plantuml-executable-start-process (buf)
   "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
-  (apply #'start-process
-         "PLANTUML" buf plantuml-executable-path
-         `(,@plantuml-executable-args
+  (apply #'make-process
+         :name "PLANTUML"
+         :buffer buf
+         :command
+         `(plantuml-executable-path
+           ,@plantuml-executable-args
            ,(plantuml-jar-output-type-opt plantuml-output-type)
-           "-p")))
+           "-p"))
+         :stderr (get-buffer-create plantuml-stderr-buffer)
+  )
 
 (defun plantuml-update-preview-buffer (prefix buf)
   "Show the preview in the preview buffer BUF.
