@@ -384,11 +384,14 @@ Note that output type `txt' is promoted to `utxt' for better rendering."
 
 (defun plantuml-executable-start-process (buf)
   "Run PlantUML as an Emacs process and puts the output into the given buffer (as BUF)."
+  (let ((b (get-buffer plantuml-stderr-buffer)))
+    (when b
+      (kill-buffer b)))
   (apply #'make-process
          :name "PLANTUML"
          :buffer buf
          :command
-         `(plantuml-executable-path
+         `("plantuml"
            ,@plantuml-executable-args
            ,(plantuml-jar-output-type-opt plantuml-output-type)
            "-p"))
