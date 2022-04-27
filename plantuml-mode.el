@@ -6,8 +6,8 @@
 ;; Author: Zhang Weize (zwz)
 ;; Maintainer: Carlo Sciolla (skuro)
 ;; Keywords: uml plantuml ascii
-;; Version: 1.2.9
-;; Package-Version: 1.2.9
+;; Version: 1.2.10
+;; Package-Version: 1.2.10
 ;; Package-Requires: ((dash "2.0.0") (emacs "25.0"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -77,7 +77,7 @@
 (require 'xml)
 
 (defgroup plantuml-mode nil
-  "Major mode for editing plantuml file."
+  "Major mode for editing a plantuml file."
   :group 'languages)
 
 (defcustom plantuml-jar-path
@@ -94,7 +94,7 @@
 
 (defvar plantuml-mode-hook nil "Standard hook for plantuml-mode.")
 
-(defconst plantuml-mode-version "20190905.838" "The plantuml-mode version string.")
+(defconst plantuml-mode-version "20220427" "The plantuml-mode version string.")
 
 (defvar plantuml-mode-debug-enabled nil)
 
